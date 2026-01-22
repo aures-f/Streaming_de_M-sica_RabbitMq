@@ -42,6 +42,15 @@ while True:
     elif request['type'] == 'reproduzir':
         publish('historico', request)
         conn.send(json.dumps({'status': 'evento enviado'}).encode())
+    
+    elif request['type'] in ['playlist', 'ver_playlist']:
+        s = socket.socket()
+        s.connect(('localhost', 5002))
+        s.send(json.dumps(request).encode())
+        resp = s.recv(4096).decode()
+        s.close()
+        conn.send(resp.encode())
+
 
 
     conn.close()
